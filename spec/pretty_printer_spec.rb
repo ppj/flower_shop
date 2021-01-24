@@ -33,7 +33,7 @@ RSpec.describe PrettyPrinter do
       it "returns a nicely formatted string" do
         expected_output = [
           "23 x #{product_code} $9.47",
-          "\t2 x 10 $7.98",
+          "\t2 x 10 $3.99",
           "\t1 x 3 $1.49",
         ].join("\n")
 

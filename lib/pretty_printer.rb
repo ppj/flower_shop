@@ -2,7 +2,7 @@
 
 class PrettyPrinter
   def self.print(product_code:, package:)
-    puts new(product_code, package).print
+    new(product_code, package).print
   end
 
   def initialize(product_code, package)
@@ -14,7 +14,7 @@ class PrettyPrinter
     output = [ order_line(total_quantity, product_code, total_price) ]
 
     package.map do |size, num|
-      output << order_line(num, size, num * available_bundles[size], indentation: true)
+      output << order_line(num, size, available_bundles[size], indentation: true)
     end
 
     output.join("\n")
