@@ -16,14 +16,14 @@ class PackageMaker
     remainder = quantity
     package = bundles.map { |bundle_size|
       count, remainder = remainder.divmod(bundle_size)
-      [bundle_size, count]
-    }.to_h
+      [bundle_size, count] if count.positive?
+    }.compact.to_h
 
-    if package_quantity(package) != quantity
-      {}
-    else
-      package.select { |_k, v| v.positive? }
+    if package_quantity(package) != quantity # Cannot create the package for the required quanity
+      return {}
     end
+
+    package
   end
 
   private
