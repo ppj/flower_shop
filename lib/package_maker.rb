@@ -13,9 +13,10 @@ class PackageMaker
   def make
     return {} if quantity < bundles.last
 
+    package = []
+
     while bundles.any?
-      package = []
-      remainder = quantity
+      remainder = quantity - package.sum
 
       bundles.each do |bundle_size|
         count, remainder = remainder.divmod(bundle_size)
@@ -23,7 +24,15 @@ class PackageMaker
       end
 
       if package_incomplete?(package, quantity)
-        bundles.shift
+        removed_available_bundle_size = bundles.shift
+        removed_bundle_size_from_package = package.pop
+
+        until removed_bundle_size_from_package == removed_available_bundle_size || package.empty?
+          # Remove packaged bundles until the last remaining packaged bundle size
+          # is the same as the one that will not be considered for packaging any more,
+          # or there is no more available bundle size remaining
+          removed_bundle_size_from_package = package.pop
+        end
       else
         break
       end
