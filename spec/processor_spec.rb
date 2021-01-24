@@ -72,8 +72,8 @@ RSpec.describe Processor do
       end
 
       it "pretty prints packages" do
-        expect(PrettyPrinter).to receive(:print).with(package1)
-        expect(PrettyPrinter).to receive(:print).with(package2)
+        expect(PrettyPrinter).to receive(:print).with(product_code: "roses", package: package1)
+        expect(PrettyPrinter).to receive(:print).with(product_code: "violets", package: package2)
 
         process
       end

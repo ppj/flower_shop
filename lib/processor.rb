@@ -20,7 +20,7 @@ class Processor
         ordered_quantity: ordered_quantity.to_i,
         available_bundle_sizes: bundles[product_code],
       )
-      PrettyPrinter.print(package)
+      PrettyPrinter.print(product_code: product_code, package: package)
     end
   end
 
