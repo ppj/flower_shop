@@ -121,5 +121,17 @@ RSpec.describe PackageMaker do
         end
       end
     end
+
+    context "when available bundle sizes are [5, 3, 9]" do
+      let(:bundles) { [5, 3, 9] }
+
+      context "when packaging for 3 items" do
+        let(:quantity) { 3 }
+
+        it "returns the bundle as { 3 => 1 }" do
+          expect(make).to eq({ 3 => 1 })
+        end
+      end
+    end
   end
 end
