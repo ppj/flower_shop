@@ -11,18 +11,11 @@ class PrettyPrinter
   end
 
   def print
-    total_price = package.map do |size, num|
-      num * available_bundles[size]
-    end.sum
+    output = [ order_line(total_quantity, product_code, total_price) ]
 
-    total_quantity = package.map do |size, num|
-      size * num
-    end.sum
-
-    output = [ "#{total_quantity} x #{product_code} $#{format("%0.2f", total_price/100.0)}" ]
-      package.map do |size, num|
-        output << "\t#{num} x #{size} $#{format("%0.2f", num * available_bundles[size]/100.0)}"
-      end
+    package.map do |size, num|
+      output << order_line(num, size, num * available_bundles[size], indentation: true)
+    end
 
     output.join("\n")
   end
@@ -31,7 +24,25 @@ class PrettyPrinter
 
   attr_reader :product_code, :package
 
+  def total_price
+    package.map { |size, num| num * available_bundles[size] }.sum
+  end
+
+  def total_quantity
+    package.map { |size, num| size * num }.sum
+  end
+
   def available_bundles
     @available_bundles ||= Catalogue.bundles[product_code]
+  end
+
+  def order_line(quantity, code, price_in_cents, indentation: false)
+    prefix = indentation ? "\t" : ""
+
+    "#{prefix}#{quantity} x #{code} $#{display_price(price_in_cents)}"
+  end
+
+  def display_price(price_in_cents)
+    format("%0.2f", price_in_cents/100.0)
   end
 end
