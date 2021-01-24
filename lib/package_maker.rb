@@ -14,33 +14,36 @@ class PackageMaker
     return {} if quantity < bundles.last
 
     while bundles.any?
+      package = []
       remainder = quantity
 
-      package = bundles.map { |bundle_size|
+      bundles.each do |bundle_size|
         count, remainder = remainder.divmod(bundle_size)
-        [bundle_size, count] if count.positive?
-      }.compact.to_h
+        count.times { package << bundle_size }
+      end
 
-      if package_quantity_mismatch?(package, quantity)
+      if package_incomplete?(package, quantity)
         bundles.shift
       else
         break
       end
     end
 
-    if package_quantity_mismatch?(package, quantity)
-      return {}
-    end
+    return {} if package_incomplete?(package, quantity)
 
-    package
+    package_grouped_by_sizes(package)
   end
 
   private
 
   attr_reader :quantity, :bundles
 
-  def package_quantity_mismatch?(package, quantity)
+  def package_incomplete?(package, quantity)
     # Quantity in the package doesn't match the required quantity
-    package.map { |bundle_size, count| bundle_size * count }.sum != quantity
+    package.sum != quantity
+  end
+
+  def package_grouped_by_sizes(package)
+    package.uniq.map { |size| [size, package.count(size)] }.to_h
   end
 end
