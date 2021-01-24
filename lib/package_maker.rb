@@ -13,13 +13,22 @@ class PackageMaker
   def make
     return {} if quantity < bundles.last
 
-    remainder = quantity
-    package = bundles.map { |bundle_size|
-      count, remainder = remainder.divmod(bundle_size)
-      [bundle_size, count] if count.positive?
-    }.compact.to_h
+    while bundles.any?
+      remainder = quantity
 
-    if package_quantity(package) != quantity # Cannot create the package for the required quanity
+      package = bundles.map { |bundle_size|
+        count, remainder = remainder.divmod(bundle_size)
+        [bundle_size, count] if count.positive?
+      }.compact.to_h
+
+      if package_quantity_mismatch?(package, quantity)
+        bundles.shift
+      else
+        break
+      end
+    end
+
+    if package_quantity_mismatch?(package, quantity)
       return {}
     end
 
@@ -30,7 +39,8 @@ class PackageMaker
 
   attr_reader :quantity, :bundles
 
-  def package_quantity(package)
-    package.map { |bundle_size, count| bundle_size * count }.sum
+  def package_quantity_mismatch?(package, quantity)
+    # Quantity in the package doesn't match the required quantity
+    package.map { |bundle_size, count| bundle_size * count }.sum != quantity
   end
 end

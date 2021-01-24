@@ -132,6 +132,22 @@ RSpec.describe PackageMaker do
           expect(make).to eq({ 3 => 1 })
         end
       end
+
+      context "when packaging for 6 items" do
+        let(:quantity) { 6 }
+
+        it "returns the bundle as { 3 => 2 }" do
+          expect(make).to eq({ 3 => 2 })
+        end
+      end
+
+      context "when packaging for 13 items" do
+        let(:quantity) { 13 }
+
+        it "returns the bundle as { 5 => 2, 3 => 1 }" do
+          expect(make).to eq({ 5 => 2, 3 => 1 })
+        end
+      end
     end
   end
 end
