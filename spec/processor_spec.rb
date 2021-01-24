@@ -17,7 +17,8 @@ RSpec.describe Processor do
       before do
         File.open("./temp", "w") do |file|
           file.write(
-            ["10 roses", "15 violets"].join("\n")
+            ["10 roses", "15 violets"].join("
+")
           )
         end
       end
@@ -36,11 +37,11 @@ RSpec.describe Processor do
 
       before do
         allow(PackageMaker).to receive(:make).with(
-          quantity: 10,
+          ordered_quantity: 10,
           available_bundle_sizes: bundles1,
         ).and_return(package1)
         allow(PackageMaker).to receive(:make).with(
-          quantity: 15,
+          ordered_quantity: 15,
           available_bundle_sizes: bundles2,
         ).and_return(package2)
       end
@@ -59,11 +60,11 @@ RSpec.describe Processor do
 
       it "asks to make packages" do
         expect(PackageMaker).to receive(:make).with(
-          quantity: 10,
+          ordered_quantity: 10,
           available_bundle_sizes: bundles1,
         )
         expect(PackageMaker).to receive(:make).with(
-          quantity: 15,
+          ordered_quantity: 15,
           available_bundle_sizes: bundles2,
         )
 

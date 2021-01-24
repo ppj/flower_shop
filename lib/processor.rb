@@ -15,9 +15,9 @@ class Processor
 
   def process
     order_lines.map do |line|
-      quantity, product_code = line.split.compact
+      ordered_quantity, product_code = line.split.compact
       package = PackageMaker.make(
-        quantity: quantity.to_i,
+        ordered_quantity: ordered_quantity.to_i,
         available_bundle_sizes: bundles[product_code],
       )
       PrettyPrinter.print(package)

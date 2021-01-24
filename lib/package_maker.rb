@@ -1,29 +1,29 @@
 # frozen_string_literal: true
 
 class PackageMaker
-  def self.make(quantity:, available_bundle_sizes:)
-    new(quantity, available_bundle_sizes).make
+  def self.make(ordered_quantity:, available_bundle_sizes:)
+    new(ordered_quantity, available_bundle_sizes).make
   end
 
-  def initialize(quantity, available_bundle_sizes)
-    @quantity = quantity
+  def initialize(ordered_quantity, available_bundle_sizes)
+    @ordered_quantity = ordered_quantity
     @available_bundle_sizes = available_bundle_sizes.sort.reverse
   end
 
   def make
-    return {} if quantity < available_bundle_sizes.last
+    return {} if ordered_quantity < available_bundle_sizes.last
 
     package = []
 
     while available_bundle_sizes.any?
-      remainder = quantity - package.sum
+      remainder = ordered_quantity - package.sum
 
       available_bundle_sizes.each do |bundle_size|
         count, remainder = remainder.divmod(bundle_size)
         count.times { package << bundle_size }
       end
 
-      if package_incomplete?(package, quantity)
+      if package_incomplete?(package)
         removed_available_bundle_size = available_bundle_sizes.shift
         removed_bundle_size_from_package = package.pop
 
@@ -38,18 +38,17 @@ class PackageMaker
       end
     end
 
-    return {} if package_incomplete?(package, quantity)
+    return {} if package_incomplete?(package)
 
     package_grouped_by_sizes(package)
   end
 
   private
 
-  attr_reader :quantity, :available_bundle_sizes
+  attr_reader :ordered_quantity, :available_bundle_sizes
 
-  def package_incomplete?(package, quantity)
-    # Quantity in the package doesn't match the required quantity
-    package.sum != quantity
+  def package_incomplete?(package)
+    package.sum != ordered_quantity
   end
 
   def package_grouped_by_sizes(package)
