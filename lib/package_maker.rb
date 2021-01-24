@@ -22,7 +22,7 @@ class PackageMaker
     if package_quantity(package) != quantity
       {}
     else
-      package
+      package.select { |_k, v| v.positive? }
     end
   end
 
