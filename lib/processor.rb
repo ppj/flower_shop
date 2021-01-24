@@ -18,7 +18,7 @@ class Processor
       quantity, product_code = line.split.compact
       package = PackageMaker.make(
         quantity: quantity.to_i,
-        bundles: bundles[product_code]
+        available_bundle_sizes: bundles[product_code],
       )
       PrettyPrinter.print(package)
     end

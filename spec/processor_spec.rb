@@ -37,11 +37,11 @@ RSpec.describe Processor do
       before do
         allow(PackageMaker).to receive(:make).with(
           quantity: 10,
-          bundles: bundles1,
+          available_bundle_sizes: bundles1,
         ).and_return(package1)
         allow(PackageMaker).to receive(:make).with(
           quantity: 15,
-          bundles: bundles2,
+          available_bundle_sizes: bundles2,
         ).and_return(package2)
       end
       let(:package1) { double }
@@ -60,11 +60,11 @@ RSpec.describe Processor do
       it "asks to make packages" do
         expect(PackageMaker).to receive(:make).with(
           quantity: 10,
-          bundles: bundles1
+          available_bundle_sizes: bundles1,
         )
         expect(PackageMaker).to receive(:make).with(
           quantity: 15,
-          bundles: bundles2
+          available_bundle_sizes: bundles2,
         )
 
         process

@@ -4,10 +4,10 @@ require_relative "../lib/package_maker"
 
 RSpec.describe PackageMaker do
   describe ".make" do
-    subject(:make) { described_class.make(quantity: quantity, bundles: bundles) }
+    subject(:make) { described_class.make(quantity: quantity, available_bundle_sizes: available_bundle_sizes) }
 
     context "when available bundle sizes are [10]" do
-      let(:bundles) { [10] }
+      let(:available_bundle_sizes) { [10] }
 
       context "when packaging for 3 pieces" do
         let(:quantity) { 3 }
@@ -43,7 +43,7 @@ RSpec.describe PackageMaker do
     end
 
     context "when available bundle sizes are [5, 10]" do
-      let(:bundles) { [5, 10] }
+      let(:available_bundle_sizes) { [5, 10] }
 
       context "when packaging for 3 pieces" do
         let(:quantity) { 3 }
@@ -87,7 +87,7 @@ RSpec.describe PackageMaker do
     end
 
     context "when available bundle sizes are [3, 6, 9]" do
-      let(:bundles) { [3, 6, 9] }
+      let(:available_bundle_sizes) { [3, 6, 9] }
 
       context "when packaging for 3 items" do
         let(:quantity) { 3 }
@@ -123,7 +123,7 @@ RSpec.describe PackageMaker do
     end
 
     context "when available bundle sizes are [5, 3, 9]" do
-      let(:bundles) { [5, 3, 9] }
+      let(:available_bundle_sizes) { [5, 3, 9] }
 
       context "when packaging for 3 items" do
         let(:quantity) { 3 }
