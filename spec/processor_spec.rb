@@ -4,8 +4,8 @@ require_relative "../lib/processor"
 
 RSpec.describe Processor do
   describe ".process" do
-    subject(:process) { described_class.process(order: order) }
-    let(:order) { "./temp" }
+    subject(:process) { described_class.process(order_file: order_file) }
+    let(:order_file) { "./temp" }
 
     context "when the input order file is not found" do
       it "raises a file not found error" do
@@ -32,17 +32,19 @@ RSpec.describe Processor do
           "violets" => bundles2,
         }
       end
-      let(:bundles1) { double }
-      let(:bundles2) { double }
+      let(:bundles1) { double(:bundle, keys: available_bundle_sizes1) }
+      let(:bundles2) { double(:bundle, keys: available_bundle_sizes2) }
+      let(:available_bundle_sizes1) { double }
+      let(:available_bundle_sizes2) { double }
 
       before do
         allow(PackageMaker).to receive(:make).with(
           ordered_quantity: 10,
-          available_bundle_sizes: bundles1,
+          available_bundle_sizes: available_bundle_sizes1,
         ).and_return(package1)
         allow(PackageMaker).to receive(:make).with(
           ordered_quantity: 15,
-          available_bundle_sizes: bundles2,
+          available_bundle_sizes: available_bundle_sizes2,
         ).and_return(package2)
       end
       let(:package1) { double }
@@ -61,11 +63,11 @@ RSpec.describe Processor do
       it "asks to make packages" do
         expect(PackageMaker).to receive(:make).with(
           ordered_quantity: 10,
-          available_bundle_sizes: bundles1,
+          available_bundle_sizes: available_bundle_sizes1,
         )
         expect(PackageMaker).to receive(:make).with(
           ordered_quantity: 15,
-          available_bundle_sizes: bundles2,
+          available_bundle_sizes: available_bundle_sizes2,
         )
 
         process
