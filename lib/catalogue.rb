@@ -22,4 +22,12 @@ class Catalogue
   def self.bundles
     PRODUCTS
   end
+
+  def self.available_bundles_with_prices(product_code)
+    bundles[product_code]
+  end
+
+  def self.available_bundle_sizes(product_code)
+    available_bundles_with_prices(product_code).keys
+  end
 end

@@ -9,8 +9,9 @@ RSpec.describe PrettyPrinter do
     let(:product_code) { "DAF08" }
 
     before do
-      allow(Catalogue).to receive(:bundles).and_return(
-        product_code => {
+      allow(Catalogue).to receive(:available_bundles_with_prices)
+        .with(product_code).and_return(
+        {
           10 => 399,
           3 => 149,
         },

@@ -18,7 +18,7 @@ class Processor
       ordered_quantity, product_code = line.split.compact
       package = PackageMaker.make(
         ordered_quantity: ordered_quantity.to_i,
-        available_bundle_sizes: bundles[product_code].keys,
+        available_bundle_sizes: available_bundle_sizes(product_code),
       )
       PrettyPrinter.print(product_code: product_code, package: package)
     end
@@ -34,7 +34,7 @@ class Processor
     @order_lines ||= File.readlines(order_file).map(&:strip).compact
   end
 
-  def bundles
-    @bundles ||= Catalogue.bundles
+  def available_bundle_sizes(product_code)
+    Catalogue.available_bundle_sizes(product_code)
   end
 end

@@ -14,7 +14,7 @@ class PrettyPrinter
     output = [ order_line(total_quantity, product_code, total_price) ]
 
     package.map do |size, num|
-      output << order_line(num, size, available_bundles[size], indentation: true)
+      output << order_line(num, size, price_for_size(size), indentation: true)
     end
 
     output.join("\n")
@@ -25,15 +25,19 @@ class PrettyPrinter
   attr_reader :product_code, :package
 
   def total_price
-    package.map { |size, num| num * available_bundles[size] }.sum
+    package.map { |size, num| num * price_for_size(size) }.sum
   end
 
   def total_quantity
     package.map { |size, num| size * num }.sum
   end
 
-  def available_bundles
-    @available_bundles ||= Catalogue.bundles[product_code]
+  def price_for_size(size)
+    available_bundles_with_prices[size]
+  end
+
+  def available_bundles_with_prices
+    @available_bundles_with_prices ||= Catalogue.available_bundles_with_prices(product_code)
   end
 
   def order_line(quantity, code, price_in_cents, indentation: false)

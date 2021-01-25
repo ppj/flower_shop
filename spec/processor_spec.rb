@@ -24,38 +24,34 @@ RSpec.describe Processor do
       end
 
       before do
-        allow(Catalogue).to receive(:bundles).and_return(bundles)
+        allow(Catalogue).to receive(:available_bundle_sizes).with("roses")
+          .and_return(available_rose_bundle_sizes)
+        allow(Catalogue).to receive(:available_bundle_sizes).with("violets")
+          .and_return(available_violet_bundle_sizes)
       end
-      let(:bundles) do
-        {
-          "roses" => bundles1,
-          "violets" => bundles2,
-        }
-      end
-      let(:bundles1) { double(:bundle, keys: available_bundle_sizes1) }
-      let(:bundles2) { double(:bundle, keys: available_bundle_sizes2) }
-      let(:available_bundle_sizes1) { double }
-      let(:available_bundle_sizes2) { double }
+      let(:available_rose_bundle_sizes) { double }
+      let(:available_violet_bundle_sizes) { double }
 
       before do
         allow(PackageMaker).to receive(:make).with(
           ordered_quantity: 10,
-          available_bundle_sizes: available_bundle_sizes1,
-        ).and_return(package1)
+          available_bundle_sizes: available_rose_bundle_sizes,
+        ).and_return(rose_package)
         allow(PackageMaker).to receive(:make).with(
           ordered_quantity: 15,
-          available_bundle_sizes: available_bundle_sizes2,
-        ).and_return(package2)
+          available_bundle_sizes: available_violet_bundle_sizes,
+        ).and_return(violet_package)
       end
-      let(:package1) { double }
-      let(:package2) { double }
+      let(:rose_package) { double }
+      let(:violet_package) { double }
 
       before do
         allow(PrettyPrinter).to receive(:print)
       end
 
       it "reads the catalogue" do
-        expect(Catalogue).to receive(:bundles)
+        expect(Catalogue).to receive(:available_bundle_sizes).with("roses")
+        expect(Catalogue).to receive(:available_bundle_sizes).with("violets")
 
         process
       end
@@ -63,19 +59,25 @@ RSpec.describe Processor do
       it "asks to make packages" do
         expect(PackageMaker).to receive(:make).with(
           ordered_quantity: 10,
-          available_bundle_sizes: available_bundle_sizes1,
+          available_bundle_sizes: available_rose_bundle_sizes,
         )
         expect(PackageMaker).to receive(:make).with(
           ordered_quantity: 15,
-          available_bundle_sizes: available_bundle_sizes2,
+          available_bundle_sizes: available_violet_bundle_sizes,
         )
 
         process
       end
 
       it "pretty prints packages" do
-        expect(PrettyPrinter).to receive(:print).with(product_code: "roses", package: package1)
-        expect(PrettyPrinter).to receive(:print).with(product_code: "violets", package: package2)
+        expect(PrettyPrinter).to receive(:print).with(
+          product_code: "roses",
+          package: rose_package
+        )
+        expect(PrettyPrinter).to receive(:print).with(
+          product_code: "violets",
+          package: violet_package
+        )
 
         process
       end
